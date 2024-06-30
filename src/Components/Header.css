@@ -34,5 +34,7 @@
 }
 
 .menu-item a:hover {
-    text-decoration: underline;
+    background-color: #3349ab; 
+    color: white;
+    border-radius: 10%;
 }

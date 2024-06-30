@@ -38,7 +38,7 @@ const SignIn = () => {
             type="email"
             id="email"
             className="form-control"
-            placeholder="Email"
+            placeholder=""
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -50,7 +50,7 @@ const SignIn = () => {
             type="password"
             id="password"
             className="form-control"
-            placeholder="Password"
+            placeholder=""
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required

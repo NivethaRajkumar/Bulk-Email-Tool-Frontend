@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import './SignUp.css';
 
@@ -31,7 +31,6 @@ const SignUp = () => {
             type="text"
             id="username"
             className="form-control"
-            placeholder=""
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
@@ -43,7 +42,6 @@ const SignUp = () => {
             type="email"
             id="email"
             className="form-control"
-            placeholder=""
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -55,7 +53,6 @@ const SignUp = () => {
             type="password"
             id="password"
             className="form-control"
-            placeholder=""
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -64,6 +61,9 @@ const SignUp = () => {
         <button type="submit" className="btn btn-primary w-100">Sign Up</button>
       </form>
       {error && <div className="alert alert-danger mt-3">{error}</div>}
+      <div className="text-center mt-3">
+        Already have an account? <Link to="/signin">Sign in</Link>
+      </div>
     </div>
   );
 };
