@@ -13,13 +13,15 @@ const Captcha = ({ onChange }) => {
   const [captcha, setCaptcha] = useState('');
 
   useEffect(() => {
-    setCaptcha(generateCaptcha());
-  }, []);
+    const newCaptcha = generateCaptcha();
+    setCaptcha(newCaptcha);
+    onChange(newCaptcha);
+  }, [onChange]);
 
   const refreshCaptcha = () => {
     const newCaptcha = generateCaptcha();
     setCaptcha(newCaptcha);
-    onChange('');
+    onChange(newCaptcha);
   };
 
   return (
