@@ -1,0 +1,38 @@
+.site-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 20px;
+    background-color: #f3f6f8;
+    border-bottom: 1px solid #7c7a7a;
+}
+
+.tool-title h1 {
+    margin: 0;
+    font-size: 1.5em;
+}
+
+.header-nav {
+    display: flex;
+    align-items: center;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.menu-item {
+    margin-left: 20px;
+}
+
+.menu-item a {
+    text-decoration: none;
+    color: #0c0d0d;
+}
+
+.menu-item a:hover {
+    text-decoration: underline;
+}
