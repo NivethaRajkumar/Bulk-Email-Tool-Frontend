@@ -19,7 +19,6 @@ const EmailTemplateCreator = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Send the template content to the backend
       const response = await axios.post('http://localhost:8000/api/templates', { subject, templateContent });
       alert('Template saved successfully');
     } catch (error) {

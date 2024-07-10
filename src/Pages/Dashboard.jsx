@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import EmailTemplateCreator from '../Components/EmailTemplateCreator';
 
 const Dashboard = () => {
   const [file, setFile] = useState(null);
@@ -7,6 +8,10 @@ const Dashboard = () => {
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [sendType, setSendType] = useState('individual');
+  const [templates, setTemplates] = useState([]);
+  const [selectedTemplate, setSelectedTemplate] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+  const [linkUrl, setLinkUrl] = useState('');
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -24,36 +29,69 @@ const Dashboard = () => {
     setMessage(e.target.value);
   };
 
+  const handleImageUrlChange = (e) => {
+    setImageUrl(e.target.value);
+  };
+
+  const handleLinkUrlChange = (e) => {
+    setLinkUrl(e.target.value);
+  };
+
   const handleSendTypeChange = (type) => {
     setSendType(type);
+    setSelectedTemplate('');
+    setEmail('');
+    setSubject('');
+    setMessage('');
+    setFile(null);
+    setImageUrl('');
+    setLinkUrl('');
+  };
+
+  const handleTemplateChange = (e) => {
+    const templateId = e.target.value;
+    setSelectedTemplate(templateId);
+    const template = templates.find(t => t._id === templateId);
+    if (template) {
+      setSubject(template.subject);
+      setMessage(template.content);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (sendType === 'individual') {
-      try {
-        const res = await axios.post('http://localhost:8000/send-email', { email, subject, message });
-        alert(res.data.message);
-        window.location.reload(); 
-      } catch (error) {
-        alert('Failed to send email');
-      }
-    } else {
-      const formData = new FormData();
-      formData.append('file', file);
 
-      try {
-        const res = await axios.post('http://localhost:8000/upload', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        });
-        alert(res.data.message);
-        window.location.reload(); 
-      } catch (error) {
-        alert('Upload failed');
-      }
+    const formData = new FormData();
+    formData.append('email', email);
+    formData.append('subject', subject);
+    formData.append('message', message);
+    formData.append('imageUrl', imageUrl);
+    formData.append('linkUrl', linkUrl);
+    if (file) {
+      formData.append('file', file);
+    }
+
+    try {
+      const res = await axios.post('http://localhost:8000/send-email', formData);
+      alert(res.data.message);
+      window.location.reload(); // Reload the page after a successful response
+    } catch (error) {
+      alert('Failed to send email');
     }
   };
+
+  const fetchTemplates = async () => {
+    try {
+      const response = await axios.get('http://localhost:8000/api/templates');
+      setTemplates(response.data);
+    } catch (error) {
+      alert('Failed to fetch templates');
+    }
+  };
+
+  useEffect(() => {
+    fetchTemplates();
+  }, []);
 
   return (
     <div className="container-fluid">
@@ -83,60 +121,72 @@ const Dashboard = () => {
 
         <main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-4">
           <h2>Dashboard</h2>
-          <form onSubmit={handleSubmit}>
-            {sendType === 'individual' ? (
-              <div>
-                <div className="form-group">
-                  <label htmlFor="email">Recipient Email</label>
-                  <input
-                    type="email"
-                    id="email"
-                    className="form-control"
-                    placeholder=""
-                    value={email}
-                    onChange={handleEmailChange}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="subject">Subject</label>
-                  <input
-                    type="text"
-                    id="subject"
-                    className="form-control"
-                    placeholder=""
-                    value={subject}
-                    onChange={handleSubjectChange}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="message">Message</label>
-                  <textarea
-                    id="message"
-                    className="form-control"
-                    placeholder=""
-                    value={message}
-                    onChange={handleMessageChange}
-                    required
-                  />
-                </div>
-              </div>
-            ) : (
-              <div className="form-group">
-                <label htmlFor="file">Upload File</label>
-                <input
-                  type="file"
-                  id="file"
-                  className="form-control-file"
-                  onChange={handleFileChange}
-                  required
-                />
-              </div>
-            )}
-            
-            <button type="submit" className="btn btn-primary">Send</button>
-          </form>
+          <div className="row">
+            <div className="col-md-6">
+              <h3>Create Template</h3>
+              <EmailTemplateCreator />
+            </div>
+            <div className="col-md-6">
+              <form onSubmit={handleSubmit}>
+                {sendType === 'individual' ? (
+                  <div>
+                    {/* <select className="form-control" value={selectedTemplate} onChange={handleTemplateChange}>
+                      <option value="">Select a template</option>
+                      {templates.map(template => (
+                        <option key={template._id} value={template._id}>{template.subject}</option>
+                      ))}
+                    </select> */}
+                    <input
+                      type="email"
+                      className="form-control"
+                      placeholder="Recipient Email"
+                      value={email}
+                      onChange={handleEmailChange}
+                      required
+                    />
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Subject"
+                      value={subject}
+                      onChange={handleSubjectChange}
+                      required
+                    />
+                    <textarea
+                      className="form-control"
+                      placeholder="Message"
+                      value={message}
+                      onChange={handleMessageChange}
+                      required
+                    />
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Image URL"
+                      value={imageUrl}
+                      onChange={handleImageUrlChange}
+                    />
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Link URL"
+                      value={linkUrl}
+                      onChange={handleLinkUrlChange}
+                    />
+                    <input
+                      type="file"
+                      onChange={handleFileChange}
+                    />
+                  </div>
+                ) : (
+                  <div>
+                    <input type="file" onChange={handleFileChange} required />
+                  </div>
+                )}
+                <button type="submit" className="btn btn-primary">Send</button>
+              </form>
+            </div>
+          </div>
         </main>
       </div>
     </div>
