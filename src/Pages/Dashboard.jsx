@@ -76,7 +76,7 @@ const Dashboard = () => {
     try {
       const res = await axios.post(`http://localhost:8000/send-email?sendType=${sendType}`, formData);
       alert(res.data.message);
-      window.location.reload(); // Reload the page after a successful response
+      window.location.reload(); 
     } catch (error) {
       alert('Failed to send email');
     }
