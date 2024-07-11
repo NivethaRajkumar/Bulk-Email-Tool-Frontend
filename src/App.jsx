@@ -5,6 +5,7 @@ import Home from './Pages/Home';
 import SignUp from './Pages/SignUp';
 import SignIn from './Pages/SignIn';
 import Dashboard from './Pages/Dashboard';
+// import Footer from './Components/Footer';
 import ProtectedRoute from './Components/ProtectedRoute';
 
 const App = () => {

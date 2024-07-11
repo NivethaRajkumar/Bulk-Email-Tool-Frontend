@@ -62,7 +62,9 @@ const Dashboard = () => {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append('email', email);
+    if (sendType === 'individual') {
+      formData.append('email', email);
+    }
     formData.append('subject', subject);
     formData.append('message', message);
     formData.append('imageUrl', imageUrl);
@@ -72,7 +74,7 @@ const Dashboard = () => {
     }
 
     try {
-      const res = await axios.post('http://localhost:8000/send-email', formData);
+      const res = await axios.post(`http://localhost:8000/send-email?sendType=${sendType}`, formData);
       alert(res.data.message);
       window.location.reload(); // Reload the page after a successful response
     } catch (error) {
@@ -128,8 +130,8 @@ const Dashboard = () => {
             </div>
             <div className="col-md-6">
               <form onSubmit={handleSubmit}>
-                {sendType === 'individual' ? (
-                  <div>
+                {sendType === 'individual' && (
+                  <>
                     {/* <select className="form-control" value={selectedTemplate} onChange={handleTemplateChange}>
                       <option value="">Select a template</option>
                       {templates.map(template => (
@@ -144,45 +146,41 @@ const Dashboard = () => {
                       onChange={handleEmailChange}
                       required
                     />
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Subject"
-                      value={subject}
-                      onChange={handleSubjectChange}
-                      required
-                    />
-                    <textarea
-                      className="form-control"
-                      placeholder="Message"
-                      value={message}
-                      onChange={handleMessageChange}
-                      required
-                    />
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Image URL"
-                      value={imageUrl}
-                      onChange={handleImageUrlChange}
-                    />
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Link URL"
-                      value={linkUrl}
-                      onChange={handleLinkUrlChange}
-                    />
-                    <input
-                      type="file"
-                      onChange={handleFileChange}
-                    />
-                  </div>
-                ) : (
-                  <div>
-                    <input type="file" onChange={handleFileChange} required />
-                  </div>
+                  </>
                 )}
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Subject"
+                  value={subject}
+                  onChange={handleSubjectChange}
+                  required
+                />
+                <textarea
+                  className="form-control"
+                  placeholder="Message"
+                  value={message}
+                  onChange={handleMessageChange}
+                  required
+                />
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Image URL"
+                  value={imageUrl}
+                  onChange={handleImageUrlChange}
+                />
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Link URL"
+                  value={linkUrl}
+                  onChange={handleLinkUrlChange}
+                />
+                <input
+                  type="file"
+                  onChange={handleFileChange}
+                />
                 <button type="submit" className="btn btn-primary">Send</button>
               </form>
             </div>
