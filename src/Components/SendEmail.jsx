@@ -28,7 +28,7 @@ const SendEmail = () => {
     }
 
     try {
-      const response = await axios.post('https://bulk-email-tool-backend-1-qe7h.onrender.com/send-email', formData, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/send-email`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
