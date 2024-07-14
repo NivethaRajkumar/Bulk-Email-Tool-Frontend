@@ -12,6 +12,7 @@ const Dashboard = () => {
   const [selectedTemplate, setSelectedTemplate] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [linkUrl, setLinkUrl] = useState('');
+  const [activeTab, setActiveTab] = useState('createTemplate');
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -76,7 +77,7 @@ const Dashboard = () => {
     try {
       const res = await axios.post(`http://localhost:8000/send-email?sendType=${sendType}`, formData);
       alert(res.data.message);
-      window.location.reload(); 
+      window.location.reload();
     } catch (error) {
       alert('Failed to send email');
     }
@@ -103,18 +104,26 @@ const Dashboard = () => {
             <ul className="nav flex-column">
               <li className="nav-item">
                 <button
-                  className={`nav-link btn ${sendType === 'individual' ? 'active' : ''}`}
-                  onClick={() => handleSendTypeChange('individual')}
+                  className={`nav-link btn ${activeTab === 'individual' ? 'active' : ''}`}
+                  onClick={() => { setActiveTab('individual'); handleSendTypeChange('individual'); }}
                 >
                   Single User
                 </button>
               </li>
               <li className="nav-item">
                 <button
-                  className={`nav-link btn ${sendType === 'bulk' ? 'active' : ''}`}
-                  onClick={() => handleSendTypeChange('bulk')}
+                  className={`nav-link btn ${activeTab === 'bulk' ? 'active' : ''}`}
+                  onClick={() => { setActiveTab('bulk'); handleSendTypeChange('bulk'); }}
                 >
                   Multiple Users
+                </button>
+              </li>
+              <li className="nav-item">
+                <button
+                  className={`nav-link btn ${activeTab === 'createTemplate' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('createTemplate')}
+                >
+                  Create Template
                 </button>
               </li>
             </ul>
@@ -123,68 +132,68 @@ const Dashboard = () => {
 
         <main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-4">
           <h2>Dashboard</h2>
-          <div className="row">
-            <div className="col-md-6">
-              <h3>Create Template</h3>
-              <EmailTemplateCreator />
+          {activeTab === 'createTemplate' ? (
+            <EmailTemplateCreator />
+          ) : (
+            <div className="row">
+              <div className="col-md-12">
+                <form onSubmit={handleSubmit}>
+                  {sendType === 'individual' && (
+                    <>
+                      {/* <select className="form-control" value={selectedTemplate} onChange={handleTemplateChange}>
+                        <option value="">Select a template</option>
+                        {templates.map(template => (
+                          <option key={template._id} value={template._id}>{template.subject}</option>
+                        ))}
+                      </select> */}
+                      <input
+                        type="email"
+                        className="form-control"
+                        placeholder="Recipient Email"
+                        value={email}
+                        onChange={handleEmailChange}
+                        required
+                      />
+                    </>
+                  )}
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Subject"
+                    value={subject}
+                    onChange={handleSubjectChange}
+                    required
+                  />
+                  <textarea
+                    className="form-control"
+                    placeholder="Message"
+                    value={message}
+                    onChange={handleMessageChange}
+                    required
+                  />
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Image URL"
+                    value={imageUrl}
+                    onChange={handleImageUrlChange}
+                  />
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Link URL"
+                    value={linkUrl}
+                    onChange={handleLinkUrlChange}
+                  />
+                  <input
+                    type="file"
+                    onChange={handleFileChange}
+                  />
+                  <button type="submit" className="btn btn-primary">Send</button>
+                </form>
+              </div>
             </div>
-            <div className="col-md-6">
-              <form onSubmit={handleSubmit}>
-                {sendType === 'individual' && (
-                  <>
-                    {/* <select className="form-control" value={selectedTemplate} onChange={handleTemplateChange}>
-                      <option value="">Select a template</option>
-                      {templates.map(template => (
-                        <option key={template._id} value={template._id}>{template.subject}</option>
-                      ))}
-                    </select> */}
-                    <input
-                      type="email"
-                      className="form-control"
-                      placeholder="Recipient Email"
-                      value={email}
-                      onChange={handleEmailChange}
-                      required
-                    />
-                  </>
-                )}
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Subject"
-                  value={subject}
-                  onChange={handleSubjectChange}
-                  required
-                />
-                <textarea
-                  className="form-control"
-                  placeholder="Message"
-                  value={message}
-                  onChange={handleMessageChange}
-                  required
-                />
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Image URL"
-                  value={imageUrl}
-                  onChange={handleImageUrlChange}
-                />
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Link URL"
-                  value={linkUrl}
-                  onChange={handleLinkUrlChange}
-                />
-                <input
-                  type="file"
-                  onChange={handleFileChange}
-                />
-                <button type="submit" className="btn btn-primary">Send</button>
-              </form>
-            </div>
-          </div>
+          )}
         </main>
       </div>
     </div>
