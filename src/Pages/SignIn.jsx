@@ -20,7 +20,7 @@ const SignIn = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:8000/api/auth/signin', { email, password });
+      const response = await axios.post('https://bulk-email-tool-backend-1-qe7h.onrender.com/api/auth/signin', { email, password });
       localStorage.setItem('token', response.data.token);
       navigate('/dashboard');
     } catch (error) {
