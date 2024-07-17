@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import EmailTemplateCreator from '../Components/EmailTemplateCreator';
 
 const Dashboard = () => {
   const [file, setFile] = useState(null);
@@ -8,11 +7,8 @@ const Dashboard = () => {
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [sendType, setSendType] = useState('individual');
-  const [templates, setTemplates] = useState([]);
-  const [selectedTemplate, setSelectedTemplate] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [linkUrl, setLinkUrl] = useState('');
-  const [activeTab, setActiveTab] = useState('createTemplate');
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -40,7 +36,6 @@ const Dashboard = () => {
 
   const handleSendTypeChange = (type) => {
     setSendType(type);
-    setSelectedTemplate('');
     setEmail('');
     setSubject('');
     setMessage('');
@@ -49,153 +44,105 @@ const Dashboard = () => {
     setLinkUrl('');
   };
 
-  const handleTemplateChange = (e) => {
-    const templateId = e.target.value;
-    setSelectedTemplate(templateId);
-    const template = templates.find(t => t._id === templateId);
-    if (template) {
-      setSubject(template.subject);
-      setMessage(template.content);
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const formData = new FormData();
-    if (sendType === 'individual') {
-      formData.append('email', email);
-    }
     formData.append('subject', subject);
     formData.append('message', message);
     formData.append('imageUrl', imageUrl);
-    formData.append('linkUrl', linkUrl);
-    if (file) {
+    formData.append('linkUrl', linkUrl); 
+    if (sendType === 'individual') {
+      formData.append('email', email);
+    } else if (sendType === 'bulk') {
       formData.append('file', file);
     }
 
     try {
-      const res = await axios.post(`http://localhost:8000/send-email?sendType=${sendType}`, formData);
+      const res = await axios.post(`http://localhost:8000/send-email`, formData);
       alert(res.data.message);
-      window.location.reload();
+      // Reset form fields
+      setEmail('');
+      setSubject('');
+      setMessage('');
+      setFile(null);
+      setImageUrl('');
+      setLinkUrl('');
     } catch (error) {
+      console.error('Error sending email:', error);
       alert('Failed to send email');
     }
   };
 
-  const fetchTemplates = async () => {
-    try {
-      const response = await axios.get('http://localhost:8000/api/templates');
-      setTemplates(response.data);
-    } catch (error) {
-      alert('Failed to fetch templates');
-    }
-  };
-
-  useEffect(() => {
-    fetchTemplates();
-  }, []);
-
   return (
-    <div className="container-fluid">
-      <div className="row">
-        <nav className="col-md-2 d-none d-md-block bg-light sidebar">
-          <div className="sidebar-sticky">
-            <ul className="nav flex-column">
-              <li className="nav-item">
-                <button
-                  className={`nav-link btn ${activeTab === 'individual' ? 'active' : ''}`}
-                  onClick={() => { setActiveTab('individual'); handleSendTypeChange('individual'); }}
-                >
-                  Single User
-                </button>
-              </li>
-              <li className="nav-item">
-                <button
-                  className={`nav-link btn ${activeTab === 'bulk' ? 'active' : ''}`}
-                  onClick={() => { setActiveTab('bulk'); handleSendTypeChange('bulk'); }}
-                >
-                  Multiple Users
-                </button>
-              </li>
-              <li className="nav-item">
-                <button
-                  className={`nav-link btn ${activeTab === 'createTemplate' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('createTemplate')}
-                >
-                  Create Template
-                </button>
-              </li>
-            </ul>
-          </div>
-        </nav>
-
-        <main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-4">
-          <h2>Dashboard</h2>
-          {activeTab === 'createTemplate' ? (
-            <EmailTemplateCreator />
-          ) : (
-            <div className="row">
-              <div className="col-md-12">
-                <form onSubmit={handleSubmit}>
-                  {sendType === 'individual' && (
-                    <>
-                      {/* <select className="form-control" value={selectedTemplate} onChange={handleTemplateChange}>
-                        <option value="">Select a template</option>
-                        {templates.map(template => (
-                          <option key={template._id} value={template._id}>{template.subject}</option>
-                        ))}
-                      </select> */}
-                      <input
-                        type="email"
-                        className="form-control"
-                        placeholder="Recipient Email"
-                        value={email}
-                        onChange={handleEmailChange}
-                        required
-                      />
-                    </>
-                  )}
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Subject"
-                    value={subject}
-                    onChange={handleSubjectChange}
-                    required
-                  />
-                  <textarea
-                    className="form-control"
-                    placeholder="Message"
-                    value={message}
-                    onChange={handleMessageChange}
-                    required
-                  />
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Image URL"
-                    value={imageUrl}
-                    onChange={handleImageUrlChange}
-                  />
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Link URL"
-                    value={linkUrl}
-                    onChange={handleLinkUrlChange}
-                  />
-                  <input
-                    type="file"
-                    onChange={handleFileChange}
-                  />
-                  <button type="submit" className="btn btn-primary">Send</button>
-                </form>
-              </div>
-            </div>
-          )}
-        </main>
-      </div>
+    <div className="container">
+      <h2>Send Email</h2>
+      <form onSubmit={handleSubmit}>
+        {sendType === 'individual' && (
+          <input
+            type="email"
+            className="form-control mb-2"
+            placeholder="Recipient Email"
+            value={email}
+            onChange={handleEmailChange}
+            required
+          />
+        )}
+        {sendType === 'bulk' && (
+          <input
+            type="file"
+            className="form-control-file mb-2"
+            onChange={handleFileChange}
+            required
+          />
+        )}
+        <input
+          type="text"
+          className="form-control mb-2"
+          placeholder="Subject"
+          value={subject}
+          onChange={handleSubjectChange}
+          required
+        />
+        <textarea
+          className="form-control mb-2"
+          placeholder="Message"
+          value={message}
+          onChange={handleMessageChange}
+          required
+        />
+        <input
+          type="text"
+          className="form-control mb-2"
+          placeholder="Image URL"
+          value={imageUrl}
+          onChange={handleImageUrlChange}
+        />
+        <input
+          type="text"
+          className="form-control mb-2"
+          placeholder="Link URL"
+          value={linkUrl}
+          onChange={handleLinkUrlChange}
+        />
+        <div>
+          <button type="submit" className="btn btn-primary mr-2">Send</button>
+          <button
+            type="button"
+            className={`btn ${sendType === 'individual' ? 'btn-primary' : 'btn-secondary'} ml-2`}
+            onClick={() => handleSendTypeChange('individual')}
+          >
+            Single User
+          </button>
+          <button
+            type="button"
+            className={`btn ${sendType === 'bulk' ? 'btn-primary' : 'btn-secondary'} ml-2`}
+            onClick={() => handleSendTypeChange('bulk')}
+          >
+            Multiple Users
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
