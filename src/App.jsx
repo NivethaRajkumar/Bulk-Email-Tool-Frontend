@@ -6,6 +6,7 @@ import SignUp from './Pages/SignUp';
 import SignIn from './Pages/SignIn';
 import Dashboard from './Pages/Dashboard';
 import ProtectedRoute from './Components/ProtectedRoute';
+// import SendEmail from './Components/SendEmail';
 import EmailForm from './Components/EmailForm';
 
 const App = () => {
@@ -17,11 +18,12 @@ const App = () => {
           <Route path='/' element={<Home />} />
           <Route path='/signup' element={<SignUp />} />
           <Route path='/signin' element={<SignIn />} />
+          <Route path='/send-email' element={<EmailForm />} />
           <Route 
             path='/dashboard' 
             element={
               <ProtectedRoute>
-                <EmailForm />
+                <Dashboard />
               </ProtectedRoute>
             } 
           />
