@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const EmailForm = () => {
   const [email, setEmail] = useState('');
@@ -6,76 +7,71 @@ const EmailForm = () => {
   const [message, setMessage] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [linkUrl, setLinkUrl] = useState('');
-  const backendURL = 'https://bulk-email-tool-backend-1-qe7h.onrender.com';
 
-  const handleSubmit = (e) => {
+  const backendURL = 'https://bulk-email-tool-backend-1-qe7h.onrender.com'; 
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    fetch(`${backendURL}/send-email`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    try {
+      const response = await axios.post(`${backendURL}/send-email`, {
         email,
         subject,
         message,
         imageUrl,
-        linkUrl
-      })
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log('Success:', data);
-      // Handle success (e.g., show a success message, reset form, etc.)
-      alert('Email sent successfully!');
-      setEmail('');
-      setSubject('');
-      setMessage('');
-      setImageUrl('');
-      setLinkUrl('');
-    })
-    .catch((error) => {
+        linkUrl,
+      });
+
+      console.log('Success:', response.data);
+    } catch (error) {
       console.error('Error:', error);
-      // Handle error (e.g., show an error message)
-      alert('Failed to send email');
-    });
+    }
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-        required
-      />
-      <input
-        type="text"
-        value={subject}
-        onChange={(e) => setSubject(e.target.value)}
-        placeholder="Subject"
-        required
-      />
-      <textarea
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        placeholder="Message"
-        required
-      ></textarea>
-      <input
-        type="text"
-        value={imageUrl}
-        onChange={(e) => setImageUrl(e.target.value)}
-        placeholder="Image URL"
-      />
-      <input
-        type="text"
-        value={linkUrl}
-        onChange={(e) => setLinkUrl(e.target.value)}
-        placeholder="Link URL"
-      />
+      <div>
+        <label>Email:</label>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+      </div>
+      <div>
+        <label>Subject:</label>
+        <input
+          type="text"
+          value={subject}
+          onChange={(e) => setSubject(e.target.value)}
+          required
+        />
+      </div>
+      <div>
+        <label>Message:</label>
+        <textarea
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          required
+        ></textarea>
+      </div>
+      <div>
+        <label>Image URL:</label>
+        <input
+          type="text"
+          value={imageUrl}
+          onChange={(e) => setImageUrl(e.target.value)}
+        />
+      </div>
+      <div>
+        <label>Link URL:</label>
+        <input
+          type="text"
+          value={linkUrl}
+          onChange={(e) => setLinkUrl(e.target.value)}
+        />
+      </div>
       <button type="submit">Send Email</button>
     </form>
   );
