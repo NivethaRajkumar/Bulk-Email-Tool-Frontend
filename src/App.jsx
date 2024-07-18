@@ -7,7 +7,7 @@ import SignIn from './Pages/SignIn';
 import Dashboard from './Pages/Dashboard';
 import ProtectedRoute from './Components/ProtectedRoute';
 // import SendEmail from './Components/SendEmail';
-import EmailForm from './EmailForm';
+import EmailForm from './Components/EmailForm';
 
 const App = () => {
   return (
