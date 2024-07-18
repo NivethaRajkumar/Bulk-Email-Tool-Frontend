@@ -7,17 +7,11 @@ const EmailForm = () => {
   const [message, setMessage] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [linkUrl, setLinkUrl] = useState('');
-  const [feedback, setFeedback] = useState('');
 
-  const backendURL = process.env.REACT_APP_BACKEND_URL;
-
-  if (!backendURL) {
-    console.error('Backend URL not set. Please set REACT_APP_BACKEND_URL in your environment variables.');
-  }
+  const backendURL = process.env.REACT_APP_BACKEND_URL; 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setFeedback('');
 
     try {
       const response = await axios.post(`${backendURL}/send-email`, {
@@ -28,10 +22,8 @@ const EmailForm = () => {
         linkUrl,
       });
 
-      setFeedback('Email sent successfully!');
       console.log('Success:', response.data);
     } catch (error) {
-      setFeedback('Failed to send email. Please try again.');
       console.error('Error:', error);
     }
   };
@@ -81,7 +73,6 @@ const EmailForm = () => {
         />
       </div>
       <button type="submit">Send Email</button>
-      {feedback && <p>{feedback}</p>}
     </form>
   );
 };
