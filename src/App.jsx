@@ -21,7 +21,6 @@ const App = () => {
             path='/dashboard' 
             element={
               <ProtectedRoute>
-                <Dashboard />
                 <EmailForm />
               </ProtectedRoute>
             } 
