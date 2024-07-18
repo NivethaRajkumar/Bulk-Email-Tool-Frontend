@@ -9,6 +9,8 @@ const EmailForm = () => {
   const [linkUrl, setLinkUrl] = useState('');
   const [feedback, setFeedback] = useState('');
 
+  REACT_APP_BACKEND_URL=https://bulk-email-tool-backend-1-qe7h.onrender.com
+
   const backendURL = process.env.REACT_APP_BACKEND_URL;
 
   const handleSubmit = async (e) => {
