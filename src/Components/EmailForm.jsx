@@ -11,6 +11,10 @@ const EmailForm = () => {
 
   const backendURL = process.env.REACT_APP_BACKEND_URL;
 
+  if (!backendURL) {
+    console.error('Backend URL not set. Please set REACT_APP_BACKEND_URL in your environment variables.');
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFeedback('');
