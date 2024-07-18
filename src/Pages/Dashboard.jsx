@@ -61,7 +61,7 @@ const Dashboard = () => {
     try {
       const res = await axios.post(`http://localhost:8000/send-email`, formData);
       alert(res.data.message);
-      // Reset form fields
+      
       setEmail('');
       setSubject('');
       setMessage('');
