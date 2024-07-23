@@ -59,7 +59,7 @@ const Dashboard = () => {
     }
 
     try {
-      const res = await axios.post(`http://localhost:8000/send-email`, formData);
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/send-email`, formData);
       alert(res.data.message);
       
       setEmail('');
