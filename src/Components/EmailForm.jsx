@@ -9,8 +9,6 @@ const EmailForm = () => {
   const [linkUrl, setLinkUrl] = useState('');
   const [file, setFile] = useState(null);
 
-  const backendURL = process.env.REACT_APP_BACKEND_URL;
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -25,7 +23,7 @@ const EmailForm = () => {
     }
 
     try {
-      const response = await axios.post(`${backendURL}/send-email`, formData, {
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/send-email`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
