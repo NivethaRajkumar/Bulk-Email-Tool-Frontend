@@ -23,7 +23,8 @@ const EmailForm = () => {
     }
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/send-email`, formData, {
+      const backendUrl = process.env.REACT_APP_BACKEND_URL;
+      const response = await axios.post(`${backendUrl}/send-email`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
