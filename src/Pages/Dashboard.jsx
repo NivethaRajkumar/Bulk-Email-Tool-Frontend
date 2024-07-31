@@ -59,10 +59,8 @@ const Dashboard = () => {
     }
 
     try {
-    //const backendUrl ="https://bulk-email-tool-backend-1-qe7h.onrender.com" ;
-    const backendUrl =process.env.REACT_APP_BACKEND_URL ;
-
-    
+    const backendUrl ="https://bulk-email-tool-backend-1-qe7h.onrender.com";
+        
     console.log("Backend URL:",backendUrl);
     const res = await axios.post(`${backendUrl}/send-email`, formData);
     alert(res.data.message);
