@@ -59,8 +59,8 @@ const Dashboard = () => {
     }
 
     try {
-    // const backendUrl ="https://bulk-email-tool-backend-1-qe7h.onrender.com";
-    const backendUrl =process.env.REACT_APP_BACKEND_URL;
+    const backendUrl ="https://bulk-email-tool-backend-1-qe7h.onrender.com";
+    // const backendUrl ="http://localhost:3000";
 
 
     console.log("Backend URL:",backendUrl);
