@@ -60,8 +60,6 @@ const Dashboard = () => {
 
     try {
     const backendUrl ="https://bulk-email-tool-backend-1-qe7h.onrender.com";
-    // const backendUrl ="http://localhost:3000";
-
 
     console.log("Backend URL:",backendUrl);
     const res = await axios.post(`${backendUrl}/send-email`, formData);
