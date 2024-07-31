@@ -10,29 +10,12 @@ const Dashboard = () => {
   const [imageUrl, setImageUrl] = useState('');
   const [linkUrl, setLinkUrl] = useState('');
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
-
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handleSubjectChange = (e) => {
-    setSubject(e.target.value);
-  };
-
-  const handleMessageChange = (e) => {
-    setMessage(e.target.value);
-  };
-
-  const handleImageUrlChange = (e) => {
-    setImageUrl(e.target.value);
-  };
-
-  const handleLinkUrlChange = (e) => {
-    setLinkUrl(e.target.value);
-  };
+  const handleFileChange = (e) => setFile(e.target.files[0]);
+  const handleEmailChange = (e) => setEmail(e.target.value);
+  const handleSubjectChange = (e) => setSubject(e.target.value);
+  const handleMessageChange = (e) => setMessage(e.target.value);
+  const handleImageUrlChange = (e) => setImageUrl(e.target.value);
+  const handleLinkUrlChange = (e) => setLinkUrl(e.target.value);
 
   const handleSendTypeChange = (type) => {
     setSendType(type);
@@ -46,12 +29,11 @@ const Dashboard = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const formData = new FormData();
     formData.append('subject', subject);
     formData.append('message', message);
     formData.append('imageUrl', imageUrl);
-    formData.append('linkUrl', linkUrl); 
+    formData.append('linkUrl', linkUrl);
     if (sendType === 'individual') {
       formData.append('email', email);
     } else if (sendType === 'bulk') {
@@ -59,11 +41,10 @@ const Dashboard = () => {
     }
 
     try {
-    const backendUrl = process.env.REACT_APP_BACKEND_URL;
-    console.log("Backend URL:", backendUrl);
-    const res = await axios.post(`${backendUrl}/send-email`, formData);
-    alert(res.data.message);
-      
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3000';
+      console.log("Backend URL:", backendUrl);
+      const res = await axios.post(`${backendUrl}/send-email`, formData);
+      alert(res.data.message);
       setEmail('');
       setSubject('');
       setMessage('');
