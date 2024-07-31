@@ -2,3 +2,5 @@
 from="/*"
 to="index.html"
 status=200
+[build.environment]
+REACT_APP_BACKEND_URL=https://bulk-email-tool-backend-1-qe7h.onrender.com
