@@ -60,7 +60,7 @@ const Dashboard = () => {
 
     try {
     // const backendUrl ="https://bulk-email-tool-backend-1-qe7h.onrender.com";
-    const backendUrl =import.meta.env.REACT_APP_BACKEND_URL;
+    const backendUrl =import.meta.env.VITE_APP_BACKEND_URL;
 
 
     console.log("Backend URL:",backendUrl);
