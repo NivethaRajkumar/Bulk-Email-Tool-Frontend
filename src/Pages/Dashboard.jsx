@@ -41,7 +41,7 @@ const Dashboard = () => {
     }
 
     try {
-      const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3000';
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:000';
       console.log("Backend URL:", backendUrl);
       const res = await axios.post(`${backendUrl}/send-email`, formData);
       alert(res.data.message);
