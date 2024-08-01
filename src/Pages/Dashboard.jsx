@@ -59,12 +59,10 @@ const Dashboard = () => {
     }
 
     try {
-    // const backendUrl ="https://bulk-email-tool-backend-1-qe7h.onrender.com";
-    const backendUrl =import.meta.env.VITE_APP_BACKEND_URL;
-
-
+    const backendUrl =import.meta.env.VITE_APP_BACKEND_URL || 'http://localhost:8000'
     console.log("Backend URL:",backendUrl);
     const res = await axios.post(`${backendUrl}/send-email`, formData);
+    console.log("Response data:", res.data);
     alert(res.data.message);
       
       setEmail('');
@@ -74,7 +72,7 @@ const Dashboard = () => {
       setImageUrl('');
       setLinkUrl('');
     } catch (error) {
-      console.error('Error sending email:', error);
+      console.error('Error sending email:', error.response?.data || error.message || error);
       alert('Failed to send email');
     }
   };
