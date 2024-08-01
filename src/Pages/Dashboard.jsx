@@ -53,17 +53,33 @@ const Dashboard = () => {
     formData.append('imageUrl', imageUrl);
     formData.append('linkUrl', linkUrl); 
     if (sendType === 'individual') {
-      formData.append('email', email);
+      // Single email case
+      if (email) {
+        formData.append('email', email);
+      } else {
+        alert('Please provide an email address for individual sending.');
+        return;
+      }
     } else if (sendType === 'bulk') {
-      formData.append('file', file);
+      // Multiple emails case
+      if (file) {
+        formData.append('file', file);
+      } else {
+        alert('Please select a file containing email addresses.');
+        return;
+      }
     }
 
     try {
-    const backendUrl =import.meta.env.VITE_APP_BACKEND_URL || 'http://localhost:8000'
-    console.log("Backend URL:",backendUrl);
-    const res = await axios.post(`${backendUrl}/send-email`, formData);
-    console.log("Response data:", res.data);
-    alert(res.data.message);
+      const backendUrl = import.meta.env.VITE_APP_BACKEND_URL || 'http://localhost:8000';
+      console.log("Backend URL:", backendUrl);
+
+      const res = await axios.post(`${backendUrl}/send-email`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      alert(res.data.message);
       
       setEmail('');
       setSubject('');
@@ -72,10 +88,20 @@ const Dashboard = () => {
       setImageUrl('');
       setLinkUrl('');
     } catch (error) {
-      console.error('Error sending email:', error.response?.data || error.message || error);
-      alert('Failed to send email');
+      console.error('Error sending email:', error);
+      if (error.response) {
+        console.error('Server response:', error.response.data);
+        alert(`Failed to send email: ${error.response.data.message || 'Unknown error'}`);
+      } else if (error.request) {
+        console.error('No response:', error.request);
+        alert('No response from server. Please try again later.');
+      } else {
+        console.error('Error:', error.message);
+        alert(`Error: ${error.message}`);
+      }
     }
   };
+  
 
   return (
     <div className="container">
