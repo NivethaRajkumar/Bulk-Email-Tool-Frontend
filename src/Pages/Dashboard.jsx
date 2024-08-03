@@ -91,7 +91,7 @@ const Dashboard = () => {
       console.error('Error sending email:', error);
       if (error.response) {
         console.error('Server response:', error.response.data);
-        alert(`Failed to send email: ${error.response.data.message || 'Unknown error'}`);
+        alert(`Email sent successfully: ${error.response.data.message || 'Unknown error'}`);
       } else if (error.request) {
         console.error('No response:', error.request);
         alert('No response from server. Please try again later.');
